@@ -4,7 +4,8 @@ import '../styles.css';
 
 const INITIAL_GOALS = Array.from({ length: 10 }, (_, i) => ({
     id: `initial-${i}`,
-    text: `Goal ${i + 1}`
+    text: `Goal ${i + 1}`,
+    description: `Description for Goal ${i + 1}`
 }));
 
 function Home() {
