@@ -11,9 +11,12 @@ function NewGoal() {
         e.preventDefault();
         if (goalName.trim()) {
             const goals = JSON.parse(localStorage.getItem('goals')) || [];
-            goals.push(goalName);
+            goals.push({
+                id: crypto.randomUUID(), // Добавляем новый ID
+                text: goalName
+            });
             localStorage.setItem('goals', JSON.stringify(goals));
-            navigate('/', { state: { newGoal: goalName } });
+            navigate('/');
         }
     };
 
@@ -21,17 +24,17 @@ function NewGoal() {
         <div className="app">
             <div className="toolbar">
                 <BackButton />
-                <h1>Новая цель</h1>
+                <h1>New goal</h1>
             </div>
             <form onSubmit={handleSubmit} className="goal-form">
                 <input
                     type="text"
                     value={goalName}
                     onChange={(e) => setGoalName(e.target.value)}
-                    placeholder="Название цели"
+                    placeholder="Goal name"
                     required
                 />
-                <button type="submit">Создать</button>
+                <button type="submit">Create</button>
             </form>
         </div>
     );
