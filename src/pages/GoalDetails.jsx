@@ -21,6 +21,10 @@ function GoalDetails() {
                 <BackButton />
                 <h1>{goal.text}</h1>
             </div>
+            <div className="goal-description">
+                <h3>Description:</h3>
+                <p>{goal.description || 'No description available'}</p>
+            </div>
         </div>
     );
 }
