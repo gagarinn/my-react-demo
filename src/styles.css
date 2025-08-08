@@ -1,0 +1,151 @@
+/* Общие стили */
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+}
+
+.app {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 16px;
+}
+
+.toolbar {
+    display: flex;
+    align-items: center;
+    height: var(--toolbar-height);
+    padding: 0 16px;
+    background: #6200ee; /* Фиолетовый как в Material */
+    color: white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Тень */
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.toolbar button {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 16px;
+    margin-right: 16px;
+    cursor: pointer;
+}
+
+.toolbar h1 {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 500;
+}
+
+.goal-list {
+    margin-top: 16px;
+}
+
+.goal-item {
+    padding: 16px;
+    margin: 8px 16px; /* Отступы как в Android */
+    background: white;
+    color: #212121; /* Темно-серый текст */
+    border-radius: 0; /* Прямоугольные элементы как в списках Android */
+    box-shadow: none;
+    border-bottom: 1px solid #e0e0e0; /* Разделитель */
+}
+
+.goal-item:active {
+    background: #f5f5f5; /* Эффект нажатия */
+}
+
+.fab {
+    position: fixed;
+    bottom: 24px;
+    right: calc((100% - min(100%, var(--android-width))) / 2 + 16px); /* Выравнивание по сетке */
+    width: var(--fab-size);
+    height: var(--fab-size);
+    border-radius: 50%;
+    background: #6200ee;
+    color: white;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+@media (max-width: 360px) {
+    .fab {
+        right: 16px;
+    }
+}
+
+.goal-form {
+    margin-top: 16px;
+}
+
+.goal-form input {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 16px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.goal-form button {
+    width: 100%;
+    padding: 12px;
+    background: #6200ee;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+/* styles.css */
+:root {
+    --android-width: 360px;
+    --toolbar-height: 56px;
+    --fab-size: 56px;
+}
+
+body {
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    background: #f5f5f5; /* Серый фон как в Android */
+    min-height: 100vh;
+    font-family: 'Roboto', sans-serif; /* Стандартный шрифт Android */
+}
+
+#root {
+    width: 100%;
+    max-width: var(--android-width);
+    background: white;
+    min-height: 100vh;
+    position: relative;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Тень для имитации телефона */
+}
+
+.back-button {
+    background: none;
+    border: none;
+    color: white; /* Наследует цвет тулбара */
+    padding: 8px;
+    margin-right: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%; /* Круглая область для клика */
+    transition: background 0.3s;
+}
+
+.back-button:hover {
+    background: rgba(255, 255, 255, 0.1); /* Эффект при наведении */
+}
+
+.back-button svg {
+    width: 24px;
+    height: 24px;
+}
