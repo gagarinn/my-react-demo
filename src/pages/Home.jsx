@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import '../styles.css';
 
 const INITIAL_GOALS = Array.from({ length: 10 }, (_, i) => ({
@@ -11,19 +11,51 @@ const INITIAL_GOALS = Array.from({ length: 10 }, (_, i) => ({
 function Home() {
     const [goals, setGoals] = useState([]);
     const navigate = useNavigate();
+    const location = useLocation();
+
+    const loadGoals = () => {
+        const savedGoals = JSON.parse(localStorage.getItem('goals')) || [];
+        const deletedInitialGoals = JSON.parse(localStorage.getItem('deletedInitialGoals')) || [];
+        
+        // Фильтруем initial goals, исключая удаленные
+        const availableInitialGoals = INITIAL_GOALS.filter(
+            goal => !deletedInitialGoals.includes(goal.id)
+        );
+        
+        const allGoals = [...availableInitialGoals, ...savedGoals];
+        setGoals(allGoals);
+    };
 
     useEffect(() => {
-        const savedGoals = JSON.parse(localStorage.getItem('goals')) || [];
-        setGoals([...INITIAL_GOALS, ...savedGoals]);
+        loadGoals();
+        
+        // Обновляем список при изменении маршрута (возврат на главную страницу)
+        const handleFocus = () => {
+            loadGoals();
+        };
+        
+        window.addEventListener('focus', handleFocus);
+        
+        return () => {
+            window.removeEventListener('focus', handleFocus);
+        };
     }, []);
 
+    // Обновляем список при изменении маршрута (возврат на главную страницу)
+    useEffect(() => {
+        if (location.pathname === '/') {
+            loadGoals();
+        }
+    }, [location.pathname]);
+
     const addGoal = (newGoal) => {
+        const savedGoals = JSON.parse(localStorage.getItem('goals')) || [];
+        const updatedSavedGoals = [...savedGoals, newGoal];
+        localStorage.setItem('goals', JSON.stringify(updatedSavedGoals));
+        
+        // Обновляем состояние
         const updatedGoals = [...goals, newGoal];
         setGoals(updatedGoals);
-        // Сохраняем ТОЛЬКО пользовательские цели
-        localStorage.setItem('goals',
-            JSON.stringify(updatedGoals.filter(g => !g.id.startsWith('initial-')))
-        );
     };
 
     return (
@@ -33,13 +65,14 @@ function Home() {
             </div>
             <div className="goal-list">
                 {goals.map((goal) => (
-                    <Link
-                        to={`/goal/${goal.id}`}
-                        key={goal.id}
-                        className="goal-item"
-                    >
-                        {goal.text}
-                    </Link>
+                    <div key={goal.id} className="goal-item-container">
+                        <Link
+                            to={`/goal/${goal.id}`}
+                            className="goal-item"
+                        >
+                            {goal.text}
+                        </Link>
+                    </div>
                 ))}
             </div>
             <button className="fab" onClick={() => navigate('/new-goal')}>
