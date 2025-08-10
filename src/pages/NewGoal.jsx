@@ -5,6 +5,7 @@ import BackButton from "../components/BackButton.jsx";
 
 function NewGoal() {
     const [goalName, setGoalName] = useState('');
+    const [description, setDescription] = useState('');
     const navigate = useNavigate();
 
     const handleSubmit = (e) => {
@@ -13,7 +14,8 @@ function NewGoal() {
             const goals = JSON.parse(localStorage.getItem('goals')) || [];
             goals.push({
                 id: crypto.randomUUID(), // Добавляем новый ID
-                text: goalName
+                text: goalName,
+                description: description
             });
             localStorage.setItem('goals', JSON.stringify(goals));
             navigate('/');
@@ -33,6 +35,12 @@ function NewGoal() {
                     onChange={(e) => setGoalName(e.target.value)}
                     placeholder="Goal name"
                     required
+                />
+                <textarea
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                    placeholder="Goal description (optional)"
+                    rows="4"
                 />
                 <button type="submit">Create</button>
             </form>
