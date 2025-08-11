@@ -9,7 +9,7 @@ function Settings() {
         <BackButton />
         <h1>Settings</h1>
       </div>
-      {/* Контент настроеек будет здесь */}
+      {/* Settings content goes here */}
     </div>
   );
 }

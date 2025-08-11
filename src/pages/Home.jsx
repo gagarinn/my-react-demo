@@ -19,46 +19,36 @@ function Home() {
         const savedGoals = JSON.parse(localStorage.getItem('goals')) || [];
         const deletedInitialGoals = JSON.parse(localStorage.getItem('deletedInitialGoals')) || [];
         
-        // Фильтруем initial goals, исключая удаленные
+        // Filter initial goals, excluding deleted ones
         const availableInitialGoals = INITIAL_GOALS.filter(
             goal => !deletedInitialGoals.includes(goal.id)
         );
-        
+
         const allGoals = [...availableInitialGoals, ...savedGoals];
         setGoals(allGoals);
     };
 
     useEffect(() => {
         loadGoals();
-        
-        // Обновляем список при изменении маршрута (возврат на главную страницу)
+
+        // Update the list when the window gets focus
         const handleFocus = () => {
             loadGoals();
         };
-        
+
         window.addEventListener('focus', handleFocus);
-        
+
         return () => {
             window.removeEventListener('focus', handleFocus);
         };
     }, []);
 
-    // Обновляем список при изменении маршрута (возврат на главную страницу)
+    // Update the list on route change (e.g., when returning to the main page)
     useEffect(() => {
         if (location.pathname === '/') {
             loadGoals();
         }
     }, [location.pathname]);
-
-    const addGoal = (newGoal) => {
-        const savedGoals = JSON.parse(localStorage.getItem('goals')) || [];
-        const updatedSavedGoals = [...savedGoals, newGoal];
-        localStorage.setItem('goals', JSON.stringify(updatedSavedGoals));
-        
-        // Обновляем состояние
-        const updatedGoals = [...goals, newGoal];
-        setGoals(updatedGoals);
-    };
 
     return (
         <div className="app">

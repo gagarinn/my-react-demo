@@ -13,7 +13,7 @@ function NewGoal() {
         if (goalName.trim()) {
             const goals = JSON.parse(localStorage.getItem('goals')) || [];
             goals.push({
-                id: crypto.randomUUID(), // Добавляем новый ID
+                id: crypto.randomUUID(), // Add a new ID
                 text: goalName,
                 description: description
             });

@@ -1,4 +1,4 @@
-/* Базовый стиль (может использоваться как плавающая кнопка, если вставлена вне тулбара) */
+/* Basic style (can be used as a floating button if inserted outside the toolbar) */
 .settings-button {
     display: flex;
     justify-content: center;
@@ -14,22 +14,22 @@
     transition: transform 0.2s ease-in-out, background-color 0.2s;
 }
 
-/* Поведение при hover */
+/* Hover behavior */
 .settings-button:hover {
     background-color: #e0e0e0;
     transform: scale(1.05);
 }
 
-/* Вариант, когда кнопка находится внутри тулбара */
+/* Variant for when the button is inside the toolbar */
 .toolbar .settings-button {
-    /* убираем фиксированное позиционирование и тени, делаем кнопку компактной */
+    /* remove fixed positioning and shadows, make it compact */
     position: static;
     box-shadow: none;
 
-    /* уводим вправо */
+    /* align to the right */
     margin-left: auto;
 
-    /* визуальный стиль под темный тулбар */
+    /* visual style for the dark toolbar */
     background: rgba(255, 255, 255, 0.15);
     color: #fff;
 }
