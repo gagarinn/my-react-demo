@@ -20,7 +20,7 @@ function GoalDetails() {
         const savedGoals = JSON.parse(localStorage.getItem('goals')) || [];
         const deletedInitialGoals = JSON.parse(localStorage.getItem('deletedInitialGoals')) || [];
         
-        // Фильтруем initial goals, исключая удаленные
+        // Filter initial goals, excluding deleted ones
         const availableInitialGoals = INITIAL_GOALS.filter(
             g => !deletedInitialGoals.includes(g.id)
         );
@@ -49,7 +49,7 @@ function GoalDetails() {
                 description: editDescription.trim()
             };
 
-            // Обновляем пользовательскую цель (без создания новой записи)
+            // Update a custom goal (without creating a new entry)
             const savedGoals = JSON.parse(localStorage.getItem('goals')) || [];
             const updatedGoals = [
                 ...savedGoals.filter(g => g.id !== updatedGoal.id),
@@ -75,13 +75,13 @@ function GoalDetails() {
 
         const savedGoals = JSON.parse(localStorage.getItem('goals')) || [];
 
-        // Если есть пользовательская версия цели с таким же id — удаляем её из сохранённых
+        // If there is a custom version of the target with the same id, we delete it from the saved ones.
         const hadSavedVersion = savedGoals.some(g => g.id === goal.id);
         if (hadSavedVersion) {
             const updatedGoals = savedGoals.filter(g => g.id !== goal.id);
             localStorage.setItem('goals', JSON.stringify(updatedGoals));
         } else if (goal.id.startsWith('initial-')) {
-            // Иначе помечаем initial-цель как удалённую
+            // Otherwise, mark the initial target as deleted
             const deletedInitialGoals = JSON.parse(localStorage.getItem('deletedInitialGoals')) || [];
             if (!deletedInitialGoals.includes(goal.id)) {
                 deletedInitialGoals.push(goal.id);
@@ -89,7 +89,7 @@ function GoalDetails() {
             }
         }
 
-        // Возврат на главную после удаления
+        // Return to home page after deletion
         navigate('/');
     };
 

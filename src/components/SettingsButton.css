@@ -1,0 +1,40 @@
+/* Basic style (can be used as a floating button if inserted outside the toolbar) */
+.settings-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+    border-radius: 50%;
+    background-color: #f1f1f1;
+    color: #333;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    width: 40px;
+    height: 40px;
+    font-size: 12px;
+    transition: transform 0.2s ease-in-out, background-color 0.2s;
+}
+
+/* Hover behavior */
+.settings-button:hover {
+    background-color: #e0e0e0;
+    transform: scale(1.05);
+}
+
+/* Variant for when the button is inside the toolbar */
+.toolbar .settings-button {
+    /* remove fixed positioning and shadows, make it compact */
+    position: static;
+    box-shadow: none;
+
+    /* align to the right */
+    margin-left: auto;
+
+    /* visual style for the dark toolbar */
+    background: rgba(255, 255, 255, 0.15);
+    color: #fff;
+}
+
+.toolbar .settings-button:hover {
+    background: rgba(255, 255, 255, 0.25);
+    transform: none;
+}
