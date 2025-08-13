@@ -1,0 +1,23 @@
+.settings-menu {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.settings-link {
+  display: block;
+  padding: 16px;
+  background-color: #7b00f3;
+  color: white;
+  text-decoration: none;
+  border-radius: 10px;
+  text-align: center;
+  font-size: 16px;
+  font-weight: 500;
+  transition: background-color 0.3s ease;
+}
+
+.settings-link:hover, .settings-link:focus {
+  background-color: #3a3a3c;
+}
