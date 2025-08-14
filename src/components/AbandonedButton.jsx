@@ -1,16 +1,22 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
-const AbandonedButton = ({ goal, setGoal }) => {
+const AbandonedButton = ({ goal, setGoal: _setGoal }) => {
+    const navigate = useNavigate();
+
     const handleAbandon = () => {
-        const updatedGoal = { ...goal, status: 'Abandoned' };
+        // Remove from active goals
         const savedGoals = JSON.parse(localStorage.getItem('goals')) || [];
-        const updatedGoals = [
-            ...savedGoals.filter(g => g.id !== updatedGoal.id),
-            updatedGoal
-        ];
+        const updatedGoals = savedGoals.filter(g => g.id !== goal.id);
         localStorage.setItem('goals', JSON.stringify(updatedGoals));
-        setGoal(updatedGoal);
+
+        // Add to abandoned goals with normalized status
+        const abandonedGoals = JSON.parse(localStorage.getItem('abandonedGoals')) || [];
+        const updatedAbandonedGoals = [...abandonedGoals, { ...goal, status: 'abandoned' }];
+        localStorage.setItem('abandonedGoals', JSON.stringify(updatedAbandonedGoals));
+
         alert('Goal marked as Abandoned.');
+        navigate('/');
     };
 
     return (

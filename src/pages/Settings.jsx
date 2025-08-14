@@ -9,14 +9,14 @@ function Settings() {
     <div className="app">
       <div className="toolbar">
         <BackButton />
-        <h1>Настройки</h1>
+        <h1>Settings</h1>
       </div>
       <div className="settings-menu">
         <Link to="/complited-goals" className="settings-link">
-          Завершённые цели
+          Complited Goals
         </Link>
         <Link to="/abandoned-goals" className="settings-link">
-          Брошенные цели
+          Abandoned Goals
         </Link>
       </div>
     </div>

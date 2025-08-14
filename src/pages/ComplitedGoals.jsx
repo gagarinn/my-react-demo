@@ -7,8 +7,7 @@ function ComplitedGoals() {
   const [completedGoals, setCompletedGoals] = useState([]);
 
   useEffect(() => {
-    const goals = JSON.parse(localStorage.getItem('goals')) || [];
-    const completed = goals.filter(goal => goal.status === 'completed');
+    const completed = JSON.parse(localStorage.getItem('completedGoals')) || [];
     setCompletedGoals(completed);
   }, []);
 
@@ -16,7 +15,7 @@ function ComplitedGoals() {
     <div className="app">
       <div className="toolbar">
         <BackButton />
-        <h1>Завершённые цели</h1>
+        <h1>Completed Goals</h1>
       </div>
       <div className="goal-list">
         {completedGoals.length > 0 ? (
@@ -24,7 +23,7 @@ function ComplitedGoals() {
             <Goal key={goal.id} goal={goal} />
           ))
         ) : (
-          <p>Нет завершённых целей.</p>
+          <p>No goals achieved.</p>
         )}
       </div>
     </div>
