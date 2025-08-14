@@ -2,6 +2,8 @@ import React, {useState} from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import '../styles.css';
 import BackButton from '../components/BackButton';
+import CompletedButton from "../components/CompletedButton.jsx";
+import AbandonedButton from "../components/AbandonedButton.jsx";
 
 const INITIAL_GOALS = Array.from({ length: 10 }, (_, i) => ({
     id: `initial-${i}`,
@@ -149,6 +151,8 @@ function GoalDetails() {
                         >
                             Delete
                         </button>
+                        <CompletedButton goal={goal} setGoal={setGoal}/>
+                        <AbandonedButton goal={goal} setGoal={setGoal}/>
                     </div>
                 </>
             )}
