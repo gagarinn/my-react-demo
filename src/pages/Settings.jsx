@@ -1,6 +1,8 @@
 import React from 'react';
 import '../styles.css';
+import './Settings.css';
 import BackButton from '../components/BackButton';
+import { Link } from 'react-router-dom';
 
 function Settings() {
   return (
@@ -9,7 +11,14 @@ function Settings() {
         <BackButton />
         <h1>Settings</h1>
       </div>
-      {/* Settings content goes here */}
+      <div className="settings-menu">
+        <Link to="/complited-goals" className="settings-link">
+          Complited Goals
+        </Link>
+        <Link to="/abandoned-goals" className="settings-link">
+          Abandoned Goals
+        </Link>
+      </div>
     </div>
   );
 }

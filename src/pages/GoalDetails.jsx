@@ -2,6 +2,8 @@ import React, {useState} from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import '../styles.css';
 import BackButton from '../components/BackButton';
+import ComplitedButton from "../components/ComplitedButton.jsx";
+import AbandonedButton from "../components/AbandonedButton.jsx";
 
 const INITIAL_GOALS = Array.from({ length: 10 }, (_, i) => ({
     id: `initial-${i}`,
@@ -18,14 +20,16 @@ function GoalDetails() {
 
     React.useEffect(() => {
         const savedGoals = JSON.parse(localStorage.getItem('goals')) || [];
+        const completedGoals = JSON.parse(localStorage.getItem('completedGoals')) || [];
+        const abandonedGoals = JSON.parse(localStorage.getItem('abandonedGoals')) || [];
         const deletedInitialGoals = JSON.parse(localStorage.getItem('deletedInitialGoals')) || [];
-        
+
         // Filter initial goals, excluding deleted ones
         const availableInitialGoals = INITIAL_GOALS.filter(
             g => !deletedInitialGoals.includes(g.id)
         );
-        
-        const allGoals = [...savedGoals, ...availableInitialGoals];
+
+        const allGoals = [...savedGoals, ...completedGoals, ...abandonedGoals, ...availableInitialGoals];
         const foundGoal = allGoals.find(g => g.id === id);
         
         if (foundGoal) {
@@ -149,6 +153,8 @@ function GoalDetails() {
                         >
                             Delete
                         </button>
+                        <ComplitedButton goal={goal} />
+                        <AbandonedButton goal={goal} setGoal={setGoal}/>
                     </div>
                 </>
             )}
