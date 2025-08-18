@@ -411,3 +411,22 @@ body {
 .abandoned-button:active {
     transform: scale(0.98);
 }
+
+/* Title + deadline badge inside goal item */
+.goal-title {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.goal-deadline-badge {
+    margin-left: auto;
+    background: #eeeeee;
+    color: #555;
+    border-radius: 999px;
+    padding: 4px 8px;
+    font-size: 12px;
+    line-height: 1;
+}

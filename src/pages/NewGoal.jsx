@@ -6,17 +6,23 @@ import BackButton from "../components/BackButton.jsx";
 function NewGoal() {
     const [goalName, setGoalName] = useState('');
     const [description, setDescription] = useState('');
+    const [deadline, setDeadline] = useState('');
     const navigate = useNavigate();
 
     const handleSubmit = (e) => {
         e.preventDefault();
         if (goalName.trim()) {
             const goals = JSON.parse(localStorage.getItem('goals')) || [];
-            goals.push({
-                id: crypto.randomUUID(), // Add a new ID
+            const newGoal = {
+                id: crypto.randomUUID(),
                 text: goalName,
-                description: description
-            });
+                description: description,
+                createdAt: new Date().toISOString(),
+            };
+            if (deadline !== '') {
+                newGoal.deadline = Number(deadline);
+            }
+            goals.push(newGoal);
             localStorage.setItem('goals', JSON.stringify(goals));
             navigate('/');
         }
@@ -41,6 +47,14 @@ function NewGoal() {
                     onChange={(e) => setDescription(e.target.value)}
                     placeholder="Goal description (optional)"
                     rows="4"
+                />
+                <input
+                    type="number"
+                    min="0"
+                    step="1"
+                    value={deadline}
+                    onChange={(e) => setDeadline(e.target.value)}
+                    placeholder="Deadline (days)"
                 />
                 <button type="submit">Create</button>
             </form>
