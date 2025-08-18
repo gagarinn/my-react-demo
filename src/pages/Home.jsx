@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import '../styles.css';
 import SettingsButton from '../components/SettingsButton.jsx';
+import {calculateDeadlineDate, formatDeadline} from "../utils/dateUtils.js";
 
 
 const INITIAL_GOALS = Array.from({ length: 10 }, (_, i) => ({
@@ -57,16 +58,24 @@ function Home() {
                 <SettingsButton/>
             </div>
             <div className="goal-list">
-                {goals.map((goal) => (
-                    <div key={goal.id} className="goal-item-container">
-                        <Link
-                            to={`/goal/${goal.id}`}
-                            className="goal-item"
-                        >
-                            {goal.text}
-                        </Link>
-                    </div>
-                ))}
+                {goals.map((goal) => {
+                    const deadlineDate = calculateDeadlineDate(goal.createdAt, goal.deadline);
+                    return (
+                        <div key={goal.id} className="goal-item-container">
+                            <Link
+                                to={`/goal/${goal.id}`}
+                                className="goal-item"
+                            >
+                                <span className="goal-title">{goal.text}</span>
+                                {deadlineDate && (
+                                    <span className="goal-deadline-badge">
+                                        {formatDeadline(deadlineDate)}
+                                    </span>
+                                )}
+                            </Link>
+                        </div>
+                    );
+                })}
             </div>
             <button className="fab" onClick={() => navigate('/new-goal')}>
                 +

@@ -1,9 +1,10 @@
-import React, {useState} from 'react';
+import React, {useMemo, useState} from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import '../styles.css';
 import BackButton from '../components/BackButton';
 import ComplitedButton from "../components/ComplitedButton.jsx";
 import AbandonedButton from "../components/AbandonedButton.jsx";
+import {calculateDeadlineDate, formatDeadline} from "../utils/dateUtils.js";
 
 const INITIAL_GOALS = Array.from({ length: 10 }, (_, i) => ({
     id: `initial-${i}`,
@@ -17,6 +18,12 @@ function GoalDetails() {
     const [isEditing, setIsEditing] = useState(false);
     const [editText, setEditText] = useState('');
     const [editDescription, setEditDescription] = useState('');
+    const [editDeadline, setEditDeadline] = useState('');
+
+    const deadlineDate = useMemo(
+        () => calculateDeadlineDate(goal?.createdAt, goal?.deadline),
+        [goal?.createdAt, goal?.deadline]
+    );
 
     React.useEffect(() => {
         const savedGoals = JSON.parse(localStorage.getItem('goals')) || [];
@@ -31,11 +38,12 @@ function GoalDetails() {
 
         const allGoals = [...savedGoals, ...completedGoals, ...abandonedGoals, ...availableInitialGoals];
         const foundGoal = allGoals.find(g => g.id === id);
-        
+
         if (foundGoal) {
             setGoal(foundGoal);
             setEditText(foundGoal.text);
             setEditDescription(foundGoal.description || '');
+            setEditDeadline(foundGoal.deadline ?? '');
         } else {
             navigate('/');
         }
@@ -50,8 +58,15 @@ function GoalDetails() {
             const updatedGoal = {
                 ...goal,
                 text: editText.trim(),
-                description: editDescription.trim()
+                description: editDescription.trim(),
+                createdAt: goal.createdAt || new Date().toISOString()
             };
+
+            if (editDeadline === '') {
+                delete updatedGoal.deadline;
+            } else {
+                updatedGoal.deadline = Number(editDeadline);
+            }
 
             // Update a custom goal (without creating a new entry)
             const savedGoals = JSON.parse(localStorage.getItem('goals')) || [];
@@ -69,6 +84,7 @@ function GoalDetails() {
     const handleCancel = () => {
         setEditText(goal.text);
         setEditDescription(goal.description || '');
+        setEditDeadline(goal.deadline ?? '');
         setIsEditing(false);
     };
 
@@ -107,7 +123,7 @@ function GoalDetails() {
                 <BackButton />
                 <h1>{goal.text}</h1>
             </div>
-            
+
             {isEditing ? (
                 <div className="goal-edit-form">
                     <input
@@ -124,6 +140,15 @@ function GoalDetails() {
                         rows="4"
                         className="edit-textarea"
                     />
+                    <input
+                        type="number"
+                        min="0"
+                        step="1"
+                        value={editDeadline}
+                        onChange={(e) => setEditDeadline(e.target.value)}
+                        placeholder="Deadline (days)"
+                        className="edit-input"
+                    />
                     <div className="edit-actions">
                         <button className="save-button" onClick={handleSave}>
                             Save
@@ -138,6 +163,10 @@ function GoalDetails() {
                     <div className="goal-description">
                         <h3>Description:</h3>
                         <p>{goal.description || 'No description available'}</p>
+                    </div>
+                    <div className="goal-description">
+                        <h3>Deadline:</h3>
+                        <p>{formatDeadline(deadlineDate)}</p>
                     </div>
 
                     <div className="goal-actions">
