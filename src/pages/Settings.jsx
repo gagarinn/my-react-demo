@@ -9,6 +9,7 @@ import {
   EXECUTION_MODE_CHECKBOX,
   EXECUTION_MODE_STRIKE
 } from '../utils/executionStatusMode.js';
+import HistoryButton from '../components/HistoryButton.jsx';
 
 function Settings() {
   const [mode, setMode] = useState(EXECUTION_MODE_CHECKBOX);
@@ -31,12 +32,6 @@ function Settings() {
         <h1>Settings</h1>
       </div>
       <div className="settings-menu">
-        <Link to="/complited-goals" className="settings-link">
-          Complited Goals
-        </Link>
-        <Link to="/abandoned-goals" className="settings-link">
-          Abandoned Goals
-        </Link>
         <button
           type="button"
           className="settings-link"
@@ -45,9 +40,7 @@ function Settings() {
         >
           Execution status
         </button>
-        <div style={{ textAlign: 'center', color: '#aaa', fontSize: 12 }}>
-          Current: {mode === EXECUTION_MODE_CHECKBOX ? 'Checkbox' : 'Strike-through'}
-        </div>
+        <HistoryButton />
       </div>
     </div>
   );
