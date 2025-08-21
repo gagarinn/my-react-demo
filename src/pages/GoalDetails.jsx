@@ -2,9 +2,8 @@ import React, {useMemo, useState} from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import '../styles.css';
 import BackButton from '../components/BackButton';
-import ComplitedButton from "../components/ComplitedButton.jsx";
-import AbandonedButton from "../components/AbandonedButton.jsx";
 import {calculateDeadlineDate, formatDeadline} from "../utils/dateUtils.js";
+import MoveToHistoryButton from '../components/MoveToHistoryButton';
 
 const INITIAL_GOALS = Array.from({ length: 10 }, (_, i) => ({
     id: `initial-${i}`,
@@ -182,8 +181,7 @@ function GoalDetails() {
                         >
                             Delete
                         </button>
-                        <ComplitedButton goal={goal} />
-                        <AbandonedButton goal={goal} setGoal={setGoal}/>
+                        <MoveToHistoryButton goal={goal} />
                     </div>
                 </>
             )}
