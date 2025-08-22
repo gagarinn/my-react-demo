@@ -3,7 +3,6 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import '../styles.css';
 import SettingsButton from '../components/SettingsButton.jsx';
 import {calculateDeadlineDate, formatDeadline} from "../utils/dateUtils.js";
-import CompletionCheckbox from '../components/CompletionCheckbox.jsx';
 import {
     getExecutionStatusMode,
     EXECUTION_MODE_CHECKBOX,
@@ -19,7 +18,6 @@ const INITIAL_GOALS = Array.from({ length: 10 }, (_, i) => ({
 
 function Home() {
     const [goals, setGoals] = useState([]);
-    const [completedGoalIds, setCompletedGoalIds] = useState(new Set());
     const [executionMode, setExecutionMode] = useState(EXECUTION_MODE_CHECKBOX);
     const navigate = useNavigate();
     const location = useLocation();
@@ -37,35 +35,19 @@ function Home() {
         setGoals(allGoals);
     };
 
-    const loadCompletedGoals = () => {
-        const stored = JSON.parse(localStorage.getItem('completedGoals')) || [];
-        setCompletedGoalIds(new Set(stored));
-    };
 
     const loadExecutionMode = () => {
         setExecutionMode(getExecutionStatusMode());
     };
 
-    const toggleGoalCompletion = (goalId, checked) => {
-        const updated = new Set(completedGoalIds);
-        if (checked) {
-            updated.add(goalId);
-        } else {
-            updated.delete(goalId);
-        }
-        setCompletedGoalIds(new Set(updated));
-        localStorage.setItem('completedGoals', JSON.stringify(Array.from(updated)));
-    };
 
     useEffect(() => {
         loadGoals();
-        loadCompletedGoals();
         loadExecutionMode();
 
         // Update the list when the window gets focus
         const handleFocus = () => {
             loadGoals();
-            loadCompletedGoals();
             loadExecutionMode();
         };
 
@@ -80,7 +62,6 @@ function Home() {
     useEffect(() => {
         if (location.pathname === '/') {
             loadGoals();
-            loadCompletedGoals();
             loadExecutionMode();
         }
     }, [location.pathname]);
@@ -94,18 +75,18 @@ function Home() {
             <div className="goal-list">
                 {goals.map((goal) => {
                     const deadlineDate = calculateDeadlineDate(goal.createdAt, goal.deadline);
-                    const isCompleted = completedGoalIds.has(goal.id);
+                    const isCompleted = !!goal.completed;
                     const isStrike = isCompleted && executionMode === EXECUTION_MODE_STRIKE;
                     const linkStyle = isStrike ? { textDecoration: 'line-through', opacity: 0.7 } : undefined;
 
                     return (
-                        <div key={goal.id} className="goal-item-container" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                            {executionMode === EXECUTION_MODE_CHECKBOX && (
-                                <CompletionCheckbox
-                                    goalId={goal.id}
-                                    checked={isCompleted}
-                                    onToggle={toggleGoalCompletion}
-                                />
+                        <div
+                            key={goal.id}
+                            className="goal-item-container"
+                            style={{ display: 'flex', alignItems: 'center', gap: '8px' }}
+                        >
+                            {isCompleted && executionMode === EXECUTION_MODE_CHECKBOX && (
+                                <span className="completed-check">✓</span>
                             )}
                             <Link
                                 to={`/goal/${goal.id}`}

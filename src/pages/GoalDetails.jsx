@@ -4,6 +4,7 @@ import '../styles.css';
 import BackButton from '../components/BackButton';
 import {calculateDeadlineDate, formatDeadline} from "../utils/dateUtils.js";
 import MoveToHistoryButton from '../components/MoveToHistoryButton';
+import GoalAccomplishedButton from '../components/GoalAccomplishedButton';
 
 const INITIAL_GOALS = Array.from({ length: 10 }, (_, i) => ({
     id: `initial-${i}`,
@@ -28,6 +29,7 @@ function GoalDetails() {
         const savedGoals = JSON.parse(localStorage.getItem('goals')) || [];
         const completedGoals = JSON.parse(localStorage.getItem('completedGoals')) || [];
         const abandonedGoals = JSON.parse(localStorage.getItem('abandonedGoals')) || [];
+        const historyGoals = JSON.parse(localStorage.getItem('historyGoals')) || [];
         const deletedInitialGoals = JSON.parse(localStorage.getItem('deletedInitialGoals')) || [];
 
         // Filter initial goals, excluding deleted ones
@@ -35,7 +37,13 @@ function GoalDetails() {
             g => !deletedInitialGoals.includes(g.id)
         );
 
-        const allGoals = [...savedGoals, ...completedGoals, ...abandonedGoals, ...availableInitialGoals];
+        const allGoals = [
+            ...savedGoals,
+            ...completedGoals,
+            ...abandonedGoals,
+            ...historyGoals,
+            ...availableInitialGoals
+        ];
         const foundGoal = allGoals.find(g => g.id === id);
 
         if (foundGoal) {
@@ -181,6 +189,7 @@ function GoalDetails() {
                         >
                             Delete
                         </button>
+                        <GoalAccomplishedButton goal={goal} setGoal={setGoal} />
                         <MoveToHistoryButton goal={goal} />
                     </div>
                 </>
