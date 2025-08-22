@@ -17,4 +17,5 @@ export function toggleExecutionStatusMode() {
 export function setExecutionStatusMode(mode) {
   const next = mode === EXECUTION_MODE_STRIKE ? EXECUTION_MODE_STRIKE : EXECUTION_MODE_CHECKBOX;
   localStorage.setItem(EXECUTION_STATUS_MODE_KEY, next);
+  return next;
 }
