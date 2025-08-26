@@ -200,9 +200,10 @@ body {
     color: #333;
 }
 
-.goal-description p {
+.goal-description p,
+.goal-description li {
     line-height: 1.6;
-    color: #666;
+    color: #000;         /* Чёткий тёмный текст */
 }
 
 .goal-form textarea {

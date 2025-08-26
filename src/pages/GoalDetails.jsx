@@ -19,6 +19,8 @@ function GoalDetails() {
     const [editText, setEditText] = useState('');
     const [editDescription, setEditDescription] = useState('');
     const [editDeadline, setEditDeadline] = useState('');
+    const [editSteps, setEditSteps] = useState('');
+    const [editSubGoals, setEditSubGoals] = useState([]);
 
     const deadlineDate = useMemo(
         () => calculateDeadlineDate(goal?.createdAt, goal?.deadline),
@@ -51,10 +53,27 @@ function GoalDetails() {
             setEditText(foundGoal.text);
             setEditDescription(foundGoal.description || '');
             setEditDeadline(foundGoal.deadline ?? '');
+            setEditSteps(foundGoal.steps ?? '');
+            setEditSubGoals(foundGoal.subGoals ?? []);
         } else {
             navigate('/');
         }
     }, [id, navigate]);
+
+    // Устанавливаем длину массива подцелей при изменении количества шагов
+    React.useEffect(() => {
+        const count = parseInt(editSteps, 10);
+        if (isNaN(count) || count <= 0) {
+            setEditSubGoals([]);
+        } else {
+            setEditSubGoals(prev => {
+                const next = [...prev];
+                while (next.length < count) next.push('');
+                while (next.length > count) next.pop();
+                return next;
+            });
+        }
+    }, [editSteps]);
 
     const handleEdit = () => {
         setIsEditing(true);
@@ -75,16 +94,39 @@ function GoalDetails() {
                 updatedGoal.deadline = Number(editDeadline);
             }
 
-            // Update a custom goal (without creating a new entry)
-            const savedGoals = JSON.parse(localStorage.getItem('goals')) || [];
-            const updatedGoals = [
-                ...savedGoals.filter(g => g.id !== updatedGoal.id),
-                updatedGoal
-            ];
-            localStorage.setItem('goals', JSON.stringify(updatedGoals));
+            if (editSteps === '') {
+                delete updatedGoal.steps;
+            } else {
+                updatedGoal.steps = Number(editSteps);
+            }
+
+            const filteredSubGoals = editSubGoals.filter(s => s.trim() !== '');
+            if (filteredSubGoals.length) {
+                updatedGoal.subGoals = filteredSubGoals;
+            } else {
+                delete updatedGoal.subGoals;
+            }
+
+            // функция-помощник для замены цели в массиве
+            const replaceGoal = (arr) =>
+                arr.some(g => g.id === updatedGoal.id)
+                    ? arr.map(g => (g.id === updatedGoal.id ? updatedGoal : g))
+                    : arr;
+
+            const savedGoals       = replaceGoal(JSON.parse(localStorage.getItem('goals')          || '[]'));
+            const completedGoals   = replaceGoal(JSON.parse(localStorage.getItem('completedGoals')  || '[]'));
+            const abandonedGoals   = replaceGoal(JSON.parse(localStorage.getItem('abandonedGoals')  || '[]'));
+            const historyGoals     = replaceGoal(JSON.parse(localStorage.getItem('historyGoals')    || '[]'));
+
+            localStorage.setItem('goals',           JSON.stringify(savedGoals));
+            localStorage.setItem('completedGoals',  JSON.stringify(completedGoals));
+            localStorage.setItem('abandonedGoals',  JSON.stringify(abandonedGoals));
+            localStorage.setItem('historyGoals',    JSON.stringify(historyGoals));
 
             setGoal(updatedGoal);
             setIsEditing(false);
+            setEditSteps(updatedGoal.steps ?? '');
+            setEditSubGoals(updatedGoal.subGoals ?? []);
         }
     };
 
@@ -92,6 +134,8 @@ function GoalDetails() {
         setEditText(goal.text);
         setEditDescription(goal.description || '');
         setEditDeadline(goal.deadline ?? '');
+        setEditSteps(goal.steps ?? '');
+        setEditSubGoals(goal.subGoals ?? []);
         setIsEditing(false);
     };
 
@@ -156,6 +200,30 @@ function GoalDetails() {
                         placeholder="Deadline (days)"
                         className="edit-input"
                     />
+                    <input
+                        type="number"
+                        min="0"
+                        step="1"
+                        value={editSteps}
+                        onChange={(e) => setEditSteps(e.target.value)}
+                        placeholder="Steps"
+                        className="edit-input"
+                    />
+
+                    {editSubGoals.map((val, idx) => (
+                        <input
+                            key={idx}
+                            type="text"
+                            value={val}
+                            onChange={e => {
+                                const next = [...editSubGoals];
+                                next[idx] = e.target.value;
+                                setEditSubGoals(next);
+                            }}
+                            placeholder={`Step ${idx + 1}`}
+                            className="edit-input"
+                        />
+                    ))}
                     <div className="edit-actions">
                         <button className="save-button" onClick={handleSave}>
                             Save
@@ -175,6 +243,22 @@ function GoalDetails() {
                         <h3>Deadline:</h3>
                         <p>{formatDeadline(deadlineDate)}</p>
                     </div>
+                    {goal.steps !== undefined && (
+                        <div className="goal-description">
+                            <h3>Steps:</h3>
+                            <p>{goal.steps}</p>
+                        </div>
+                    )}
+                    {goal.subGoals && goal.subGoals.length > 0 && (
+                        <div className="goal-description">
+                            <h3>Sub goals:</h3>
+                            <ol>
+                                {goal.subGoals.map((sg, i) => (
+                                    <li key={i}>{sg}</li>
+                                ))}
+                            </ol>
+                        </div>
+                    )}
 
                     <div className="goal-actions">
                         <button 

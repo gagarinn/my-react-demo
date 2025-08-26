@@ -7,7 +7,25 @@ function NewGoal() {
     const [goalName, setGoalName] = useState('');
     const [description, setDescription] = useState('');
     const [deadline, setDeadline] = useState('');
+    const [steps, setSteps] = useState('');
+    const [subGoals, setSubGoals] = useState([]);
     const navigate = useNavigate();
+
+    // синхронизация массива подцелей с числом steps
+    React.useEffect(() => {
+        const count = parseInt(steps, 10);
+        if (isNaN(count) || count <= 0) {
+            setSubGoals([]);
+        } else {
+            setSubGoals(prev => {
+                const copy = [...prev];
+                // увеличиваем или укорачиваем массив до нужной длины
+                while (copy.length < count) copy.push('');
+                while (copy.length > count) copy.pop();
+                return copy;
+            });
+        }
+    }, [steps]);
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -21,6 +39,13 @@ function NewGoal() {
             };
             if (deadline !== '') {
                 newGoal.deadline = Number(deadline);
+            }
+            if (steps !== '') {
+                newGoal.steps = Number(steps);
+            }
+            const filteredSubGoals = subGoals.filter(s => s.trim() !== '');
+            if (filteredSubGoals.length) {
+                newGoal.subGoals = filteredSubGoals;
             }
             goals.push(newGoal);
             localStorage.setItem('goals', JSON.stringify(goals));
@@ -56,6 +81,28 @@ function NewGoal() {
                     onChange={(e) => setDeadline(e.target.value)}
                     placeholder="Deadline (days)"
                 />
+                <input
+                    type="number"
+                    min="0"
+                    step="1"
+                    value={steps}
+                    onChange={(e) => setSteps(e.target.value)}
+                    placeholder="Steps"
+                />
+
+                {subGoals.map((val, idx) => (
+                    <input
+                        key={idx}
+                        type="text"
+                        value={val}
+                        onChange={e => {
+                            const next = [...subGoals];
+                            next[idx] = e.target.value;
+                            setSubGoals(next);
+                        }}
+                        placeholder={`Step ${idx + 1}`}
+                    />
+                ))}
                 <button type="submit">Create</button>
             </form>
         </div>
